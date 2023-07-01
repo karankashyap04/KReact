@@ -1,10 +1,12 @@
+// This file defines functions to help create KReact elements}
+
 function createJSXElement(type, elementProperties, ...elementChildren) {
   let element = {
     type: type,
     properties: {
       ...elementProperties,
     },
-    children: elementChildren,
+    children: createChildren(elementChildren),
   };
   return element;
 }
@@ -12,16 +14,17 @@ function createJSXElement(type, elementProperties, ...elementChildren) {
 function createTextElement(text) {
   // here, we are wrapping some alphanumeric text into an element
   let textElement = {
-    type: "text-element",
+    type: "TEXT_ELEMENT",
     properties: {
       // TODO: Fill out properties here as needed
+      nodeValue: text,
     },
     children: [],
   };
   return textElement;
 }
 
-function createChildren(...elementChildren) {
+function createChildren(elementChildren) {
   let children = elementChildren.map((child) => {
     // if the child is already an object (element), it can remain as is.
     // if not, we need to create an element for that child.
@@ -30,6 +33,7 @@ function createChildren(...elementChildren) {
     }
     return createTextElement(child);
   });
+  return children;
 }
 
 export { createJSXElement };
