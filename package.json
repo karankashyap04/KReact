@@ -1,0 +1,12 @@
+{
+  "name": "kreact",
+  "version": "1.0.0",
+  "description": "A react-like frontend framework supporting JSX elements, functional components, state hooks, and more",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/index.js"
+  },
+  "author": "Karan Kashyap",
+  "license": "ISC"
+}
