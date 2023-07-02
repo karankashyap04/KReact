@@ -26,7 +26,7 @@ function createChildren(elementChildren) {
 function createTextElement(text) {
   // here, we are wrapping some alphanumeric text into an element
   let textElement = {
-    type: "text-element",
+    type: "text",
     properties: {
       // TODO: Fill out properties here as needed
       nodeValue: text,
