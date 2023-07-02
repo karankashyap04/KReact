@@ -2,14 +2,14 @@
 
 var nextTaskFiber = null;
 
-requestIdleCallback(scheduleTasks);
+// window.requestIdleCallback(runRenderTasks);
 
-function runTasks(requestIdleCallbackDeadline) {
+function runRenderTasks(requestIdleCallbackDeadline) {
   while (nextTaskFiber) {
     nextTaskFiber = executeTaskAndScheduleNext(nextTaskFiber);
     // stop rendering if less than 2ms are left in this idle period
     if (requestIdleCallbackDeadline.timeRemaining() < 2) {
-      requestIdleCallback(scheduleTasks);
+      window.requestIdleCallback(runRenderTasks);
       break;
     }
   }
@@ -71,4 +71,4 @@ function scheduleNextTask(fiber) {
   }
 }
 
-export { nextTaskFiber };
+export { nextTaskFiber, runRenderTasks };

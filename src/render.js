@@ -1,23 +1,31 @@
 // This file defines functions required to render KReact elements
 
+import { nextTaskFiber } from "./scheduler";
+import { runRenderTasks } from "./scheduler";
+
+// NOTE: might want to move this into the end of the renderElement function
+window.requestIdleCallback(runRenderTasks);
+
 function renderElement(element, parentContainer) {
-  // create the element in the DOM
-  let domElement =
-    element.type === "TEXT_ELEMENT"
+  // set the next render task to be for the root of the fiber tree
+  nextTaskFiber = {
+    parentContainerDOM: parentContainer,
+    properties: {},
+    children: [element],
+  };
+}
+
+function createFiberDOM(fiber) {
+  // create the DOM element for this fiber
+  let fiberDOM =
+    fiber.type === "text-element"
       ? document.createTextNode("")
-      : document.createElement(element.type);
+      : document.createElement(fiber.type);
 
-  // assign properties to the domElement
-  console.log(element.properties);
-  Object.entries(element.properties).forEach(([key, value]) => {
-    domElement[key] = value;
+  // assign properties to the elementDOM
+  Object.entries(fiber.properties).forEach(([key, value]) => {
+    fiberDOM[key] = value;
   });
-
-  // render all the children as well
-  element.children.forEach((child) => renderElement(child, domElement));
-
-  // append the created domElement to the parentContainer
-  parentContainer.appendChild(domElement);
 }
 
 export { renderElement };
