@@ -11,19 +11,6 @@ function createJSXElement(type, elementProperties, ...elementChildren) {
   return element;
 }
 
-function createTextElement(text) {
-  // here, we are wrapping some alphanumeric text into an element
-  let textElement = {
-    type: "TEXT_ELEMENT",
-    properties: {
-      // TODO: Fill out properties here as needed
-      nodeValue: text,
-    },
-    children: [],
-  };
-  return textElement;
-}
-
 function createChildren(elementChildren) {
   let children = elementChildren.map((child) => {
     // if the child is already an object (element), it can remain as is.
@@ -34,6 +21,19 @@ function createChildren(elementChildren) {
     return createTextElement(child);
   });
   return children;
+}
+
+function createTextElement(text) {
+  // here, we are wrapping some alphanumeric text into an element
+  let textElement = {
+    type: "text-element",
+    properties: {
+      // TODO: Fill out properties here as needed
+      nodeValue: text,
+    },
+    children: [],
+  };
+  return textElement;
 }
 
 export { createJSXElement };
