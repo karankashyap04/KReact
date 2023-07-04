@@ -4,9 +4,15 @@ import { createFiberDOM, commitFiberTreeToDom, fiberTreeRoot } from "./render";
 import { reconcileChanges } from "./reconciler";
 
 let nextTaskFiber = null;
+let currentFunctionalFiber = null; // fiber for the functional component currently being rendered
 
 function setNextTaskFiber(fiber) {
   nextTaskFiber = fiber;
+}
+
+function setCurrentFunctionalFiber(fiber, hookPos) {
+  currentFunctionalFiber.fiber = fiber;
+  currentFunctionalFiber.hookPos = hookPos;
 }
 
 function runRenderTasks(requestIdleCallbackDeadline) {
@@ -60,6 +66,14 @@ function isFunctionalComponent(fiber) {
 }
 
 function updateFunctionalComponent(fiber) {
+  // set the current functional fiber to point to the fiber for the functional component
+  // currently being worked on
+  currentFunctionalFiber = {
+    fiber: fiber,
+    hookPos: 0,
+  };
+  currentFunctionalFiber.fiber.hooks = []; // no hooks currently defined for this functional component
+
   // create a new fiber tree for this functional component
   const functionalComponentChildren = [fiber.type(fiber.properties)]; // TODO: need to merge fiber.children into this??
   reconcileChanges(fiber, functionalComponentChildren);
@@ -75,4 +89,10 @@ function updateDOMComponent(fiber) {
   reconcileChanges(fiber);
 }
 
-export { nextTaskFiber, runRenderTasks, setNextTaskFiber };
+export {
+  nextTaskFiber,
+  currentFunctionalFiber,
+  runRenderTasks,
+  setNextTaskFiber,
+  setCurrentFunctionalFiber,
+};

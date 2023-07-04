@@ -7,6 +7,10 @@ import { deletionQueue, setDeletionQueue } from "./reconciler";
 let fiberTreeRoot = null;
 let lastCommittedFiberTreeRoot = null;
 
+function setFiberTreeRoot(fiber) {
+  fiberTreeRoot = fiber;
+}
+
 // NOTE: might want to move this into the end of the renderElement function
 window.requestIdleCallback(runRenderTasks);
 
@@ -151,4 +155,11 @@ function updateDOMPropertiesAndEventListeners(fiber) {
   });
 }
 
-export { renderElement, createFiberDOM, commitFiberTreeToDom, fiberTreeRoot };
+export {
+  renderElement,
+  createFiberDOM,
+  commitFiberTreeToDom,
+  fiberTreeRoot,
+  setFiberTreeRoot,
+  lastCommittedFiberTreeRoot,
+};
