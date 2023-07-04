@@ -60,12 +60,22 @@ function commitFiberTreeToDom() {
 }
 
 function commitFiberToDom(fiber) {
-  const parentContainer = fiber.parent.dom;
+  // go up the dom tree till we find an ancestor of this fiber which has a dom node
+  let fiberParent = fiber.parent;
+  while (!fiberParent.dom) {
+    fiberParent = fiberParent.parent;
+  }
+  const parentContainer = fiberParent.dom;
 
   if (fiber.dom && fiber.changeMade === "add") {
     parentContainer.appendChild(fiber.dom);
   } else if (fiber.changeMade === "deleted") {
-    parentContainer.removeChild(fiber.dom);
+    // go down the fiber tree till we find a child to be removed (child which has a dom node)
+    let toDelete = fiber;
+    while (!toDelete.dom) {
+      toDelete = toDelete.child;
+    }
+    parentContainer.removeChild(toDelete.dom);
   } else if (fiber.dom && fiber.changeMade === "property-update") {
     updateDOMPropertiesAndEventListeners(fiber);
   }

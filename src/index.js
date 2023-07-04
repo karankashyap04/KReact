@@ -7,17 +7,18 @@ const KReact = { createJSXElement, renderElement };
 
 const sample_container = document.getElementById("root");
 
-const updateInput = (event) => render(event.target.value);
-
-const render = (inputValue) => {
-  const sample_element = (
+function App(properties) {
+  return (
     <div>
-      <h2>Type into the form below:</h2>
-      <input onInput={updateInput} value={inputValue} />
-      <h3>The content in the input is: {inputValue}</h3>
+      <h1>Hey {properties.username}!</h1>
+      <h3>Welcome to KReact!</h3>
+      <h4>
+        Take a tour of this sample KReact site; KReact is guaranteed to become
+        your next favorite frontend framework :D
+      </h4>
     </div>
   );
-  KReact.renderElement(sample_element, sample_container);
-};
+}
 
-render("");
+const element = <App username="Karan" />;
+KReact.renderElement(element, sample_container);

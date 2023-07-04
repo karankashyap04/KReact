@@ -6,7 +6,7 @@ function setDeletionQueue(queue) {
   deletionQueue = queue;
 }
 
-function reconcileChanges(fiber) {
+function reconcileChanges(fiber, fiberChildren) {
   // since every child of the element associated with this fiber is also an element,
   // each of those children will have their own fibers. Creating fibers for children:
   let leftSibling = null;
@@ -15,8 +15,10 @@ function reconcileChanges(fiber) {
     ? fiber.previousFiberRootCommit.child
     : null;
 
-  while (i < fiber.children.length || prevCommitFiber != null) {
-    const child = fiber.children[i];
+  const children = fiberChildren === undefined ? fiber.children : fiberChildren;
+
+  while (i < children.length || prevCommitFiber != null) {
+    const child = children[i];
     let reconciledFiber = null;
 
     // Comparing the child fiber against the fiber from the previous commit:

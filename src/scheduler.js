@@ -26,14 +26,12 @@ function runRenderTasks(requestIdleCallbackDeadline) {
 }
 
 function executeTaskAndScheduleNext(fiber) {
-  // create a DOM element for this fiber is it doesn't already exist
-  if (!fiber.dom) {
-    fiber.dom = createFiberDOM(fiber);
+  if (isFunctionalComponent(fiber)) {
+    updateFunctionalComponent(fiber);
+  } else {
+    updateDOMComponent(fiber);
   }
-
-  // reconcile changes with previous committed fiber tree and then schedule
-  // the next appropriate task
-  reconcileChanges(fiber);
+  // schedule the next appropriate task to run
   return scheduleNextTask(fiber);
 }
 
@@ -55,6 +53,26 @@ function scheduleNextTask(fiber) {
     }
     parentFiber = parentFiber.parent;
   }
+}
+
+function isFunctionalComponent(fiber) {
+  return fiber.type instanceof Function;
+}
+
+function updateFunctionalComponent(fiber) {
+  // create a new fiber tree for this functional component
+  const functionalComponentChildren = [fiber.type(fiber.properties)]; // TODO: need to merge fiber.children into this??
+  reconcileChanges(fiber, functionalComponentChildren);
+}
+
+function updateDOMComponent(fiber) {
+  // create a DOM node for this fiber if it doesn't already exist
+  if (!fiber.dom) {
+    fiber.dom = createFiberDOM(fiber);
+  }
+
+  // reconcile changes with previous committed fiber tree
+  reconcileChanges(fiber);
 }
 
 export { nextTaskFiber, runRenderTasks, setNextTaskFiber };
